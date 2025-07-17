@@ -67,3 +67,36 @@ endpoint.set_kcp_config_factory(|conv| {
     KcpConfig::new_turbo(conv)
 });
 ```
+
+## Building
+
+This crate uses pregenerated FFI bindings to avoid requiring LLVM/Clang at build time.
+
+### For Users
+
+Simply run:
+```bash
+cargo build
+```
+
+No additional dependencies required! The pregenerated bindings are included in the source code.
+
+### For Maintainers
+
+When the KCP submodule is updated, you need to regenerate the bindings:
+
+```bash
+# Generate new bindings for the current KCP version
+cargo build --features bindgen
+
+# Commit the generated bindings file
+git add src/binding_*.rs
+git commit -m "Update bindings for KCP version"
+```
+
+The generated binding file is named `binding_{commit_id}.rs` where `commit_id` is the current KCP submodule commit hash.
+
+### Build Features
+
+- **Default**: Uses pregenerated bindings, no LLVM dependency
+- **`bindgen`**: Enables bindgen to generate new bindings when needed
