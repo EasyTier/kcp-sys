@@ -600,6 +600,8 @@ impl KcpEndpoint {
                 });
                 data.conn_map
                     .retain(|conn_id, _| data.state_map.contains_key(conn_id));
+                data.state_map.shrink_to_fit();
+                data.conn_map.shrink_to_fit();
                 tokio::time::sleep(std::time::Duration::from_secs(10)).await;
             }
         });
